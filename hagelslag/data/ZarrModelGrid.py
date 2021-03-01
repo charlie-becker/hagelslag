@@ -51,6 +51,29 @@ class ZarrModelGrid(object):
             else:
                 self.file_objects.append(None)
 
+    def load_data(self):
+
+        units = ""
+        var_dict = {'REFC': 'entire_atmosphere',
+                    'UGRD': '10m_above_ground',
+                    'VGRD': '10m_above_ground'}
+
+        fs = s3fs.S3FileSystem(anon=True)
+        files = []
+        level = var_dict[self.variable]
+        path = join(self.path, self.run_date, f'{self.run_date}_{self.start_date}z_fcst.zarr', level, self.variable, level)
+        print(f'THIS IS THE PATH: {path}')
+        f = s3fs.S3Map(root=path, s3=fs, check=False)
+        files.append(f)
+
+        ds = xr.open_mfdataset(files, engine='zarr', chunks=1000).load()
+        array = ds.values.astype('float32')
+
+        if hasattr(ds[self.variable], 'units'):
+            units = ds[self.variable].attrs['units']
+
+        return array, units
+
     def load_data_old(self):
         """
         Loads time series of 2D data grids from each opened file. The code
@@ -92,7 +115,7 @@ class ZarrModelGrid(object):
             data = None
         return data, units
 
-    def load_data(self):
+    def load_data_also_old(self):
         """
         Load data from netCDF file objects or list of netCDF file objects. Handles special variable name formats.
 
