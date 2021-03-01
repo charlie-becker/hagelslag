@@ -189,7 +189,7 @@ class ModelOutput(object):
                                self.end_date,
                                self.path)
             self.data, self.units = mg.load_data()
-            mg.close()
+            #mg.close()
         else:
             print(self.ensemble_name + " not supported.")
 

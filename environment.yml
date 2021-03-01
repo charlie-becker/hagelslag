@@ -22,5 +22,6 @@ dependencies:
   - cython
   - sphinx
   - mock
+  - s3fs
   - pip:
       - git+https://github.com/jswhit/ncepgrib2.git
