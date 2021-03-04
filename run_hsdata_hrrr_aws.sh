@@ -9,4 +9,4 @@
 #SBATCH --output=aws_hsdata.out
 #SBATCH --mail-type=ALL
 conda activate hagelslag
-python -u /glade/scratch/cbecker/hagelslag/bin/hsdata /glade/scratch/cbecker/hagelslag/config/HRRR_AWS.config -p 1
+python -u /glade/scratch/cbecker/hagelslag/bin/hsdata /glade/scratch/cbecker/hagelslag/config/HRRR_AWS_stream.config -p 1

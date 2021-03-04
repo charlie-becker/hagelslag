@@ -39,30 +39,15 @@ class ZarrModelGrid(object):
                                          end=self.end_date,
                                          freq=self.frequency)
         self.forecast_hours = (self.valid_dates.values - self.run_date).astype("timedelta64[h]").astype(int)
-        #self.file_objects = []
-        # self.__enter__()
 
-    # def __enter__(self):
-    #     """
-    #     Open each file for reading.
-    #
-    #     """
-    #     for filename in self.filenames:
-    #         if exists(filename):
-    #             self.file_objects.append(Dataset(filename))
-    #         else:
-    #             self.file_objects.append(None)
 
     def load_data(self):
 
         units = ""
-        var_dict = {'REFC': 'entire_atmosphere',
-                    'UGRD': '10m_above_ground',
-                    'VGRD': '10m_above_ground'}
-
+        level = self.variable.split('-')[1]
+        self.variable = self.variable.split('-')[0]
         fs = s3fs.S3FileSystem(anon=True)
         files = []
-        level = var_dict[self.variable]
         run_date_str = self.run_date.item().strftime("%Y%m%d")
         forecast_hour = self.run_date.item().strftime("%H")
 
@@ -77,17 +62,3 @@ class ZarrModelGrid(object):
             units = ds[self.variable].attrs['units']
 
         return array, units
-
-    # def __exit__(self):
-    #     """
-    #     Close links to all open file objects and delete the objects.
-    #     """
-    #     for file_object in self.file_objects:
-    #         file_object.close()
-    #     del self.file_objects[:]
-    #
-    # def close(self):
-    #     """
-    #     Close links to all open file objects and delete the objects.
-    #     """
-    #     self.__exit__()
